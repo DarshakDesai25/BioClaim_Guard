@@ -156,3 +156,4 @@ st.markdown("""
 Educational demo for INFO7375 – Branding & AI
 </div>
 """, unsafe_allow_html=True)
+ 
