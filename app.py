@@ -7,7 +7,7 @@ import time
 # PAGE CONFIG
 # -----------------------------------------
 st.set_page_config(
-    page_title="BioClaim Guard | Executive Dashboard",
+    page_title="BioClaim Guard | Credibility Dashboard",
     page_icon="🧬",
     layout="wide"
 )
@@ -20,52 +20,54 @@ st.markdown("""
 html, body {
     background-color: #F8FAFC;
 }
-.metric-card {
+.card {
     background:white;
-    padding:20px;
-    border-radius:16px;
-    box-shadow:0px 10px 30px rgba(15,23,42,0.08);
-    text-align:center;
+    padding:22px;
+    border-radius:18px;
+    box-shadow:0px 10px 28px rgba(15,23,42,0.08);
 }
 .section {
     margin-top:40px;
+}
+.small {
+    color:#64748B;
+    font-size:14px;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # -----------------------------------------
-# SIDEBAR CONFIGURATION
+# SIDEBAR
 # -----------------------------------------
-st.sidebar.markdown("## ⚙️ Analysis Configuration")
+st.sidebar.markdown("## ⚙️ Analysis Controls")
 
-claim_type = st.sidebar.selectbox(
-    "Claim Category",
-    ["All Claims", "Vaccines", "Drugs", "Medical Devices", "Nutrition"]
+st.sidebar.selectbox(
+    "Claim Domain",
+    ["All Domains", "Vaccines", "Drugs", "Devices", "Nutrition"]
 )
 
-time_range = st.sidebar.selectbox(
-    "Time Range",
+st.sidebar.selectbox(
+    "Evidence Window",
     ["Last 6 months", "Last 1 year", "Last 3 years"]
 )
 
-analysis_depth = st.sidebar.radio(
-    "Analysis Depth",
-    ["Quick Scan", "Deep Analysis"]
+st.sidebar.radio(
+    "Verification Mode",
+    ["Rapid Screening", "Deep Evidence Review"]
 )
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("### 🧬 About BioClaim Guard")
 st.sidebar.info(
-    "BioClaim Guard is an AI-assisted credibility assessment tool for biomedical "
-    "and health-related claims. Powered by the Madison AI Framework."
+    "BioClaim Guard applies responsible AI to evaluate biomedical claims "
+    "using transparent scoring and traceable sources."
 )
 
 # -----------------------------------------
-# HEADER / LOGOTYPE
+# HEADER
 # -----------------------------------------
 st.markdown("""
 <h1 style="
-    font-size:44px;
+    font-size:42px;
     font-weight:900;
     background: linear-gradient(90deg, #2563EB, #06B6D4);
     -webkit-background-clip:text;
@@ -74,117 +76,108 @@ st.markdown("""
 🧬 BioClaim Guard
 </h1>
 
-<p style="font-size:16px; color:#475569;">
-Executive Credibility Intelligence Dashboard · Powered by Madison AI
+<p class="small">
+Credibility Intelligence for Biomedical & Health Claims
 </p>
 """, unsafe_allow_html=True)
 
 # -----------------------------------------
 # RUN ANALYSIS
 # -----------------------------------------
-if st.button("🚀 Run Credibility Analysis"):
-    with st.spinner("Analyzing biomedical claims..."):
-        time.sleep(1.5)
-    st.success("Analysis complete!")
+if st.button("🔍 Analyze Claim Dataset"):
+    with st.spinner("Evaluating evidence signals..."):
+        time.sleep(1.3)
+    st.success("Credibility assessment complete")
 
 # -----------------------------------------
-# EXECUTIVE DASHBOARD METRICS
-# -----------------------------------------
-st.markdown("<div class='section'></div>", unsafe_allow_html=True)
-st.markdown("## 📊 Executive Dashboard")
-
-col1, col2, col3, col4 = st.columns(4)
-
-with col1:
-    st.markdown("<div class='metric-card'><h3>Total Claims</h3><h1>120</h1></div>", unsafe_allow_html=True)
-
-with col2:
-    st.markdown("<div class='metric-card'><h3>High Risk</h3><h1 style='color:#EF4444;'>12</h1></div>", unsafe_allow_html=True)
-
-with col3:
-    st.markdown("<div class='metric-card'><h3>Moderate</h3><h1 style='color:#F59E0B;'>47</h1></div>", unsafe_allow_html=True)
-
-with col4:
-    st.markdown("<div class='metric-card'><h3>Avg Confidence</h3><h1>61%</h1></div>", unsafe_allow_html=True)
-
-# -----------------------------------------
-# CREDIBILITY DISTRIBUTION (NO MATPLOTLIB)
+# OVERVIEW METRICS (DISTINCT FROM HELIX)
 # -----------------------------------------
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
-st.markdown("## 📈 Credibility Distribution")
+st.markdown("## 📌 Credibility Overview")
 
-chart_data = pd.DataFrame({
-    "Claims": [12, 47, 61]
-}, index=["High Risk", "Moderate", "Low"])
+c1, c2, c3, c4 = st.columns(4)
 
-st.bar_chart(chart_data)
+with c1:
+    st.markdown("<div class='card'><h3>Total Claims</h3><h1>120</h1></div>", unsafe_allow_html=True)
+with c2:
+    st.markdown("<div class='card'><h3>Well-Supported</h3><h1 style='color:#16A34A;'>61</h1></div>", unsafe_allow_html=True)
+with c3:
+    st.markdown("<div class='card'><h3>Mixed Evidence</h3><h1 style='color:#F59E0B;'>47</h1></div>", unsafe_allow_html=True)
+with c4:
+    st.markdown("<div class='card'><h3>Low Support</h3><h1 style='color:#EF4444;'>12</h1></div>", unsafe_allow_html=True)
 
 # -----------------------------------------
-# EXECUTIVE SUMMARY
+# CREDIBILITY DISTRIBUTION
 # -----------------------------------------
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
-st.markdown("## 🧠 Executive Summary")
+st.markdown("## 📊 Evidence Support Distribution")
+
+chart_df = pd.DataFrame({
+    "Claims": [61, 47, 12]
+}, index=["Well-Supported", "Mixed Evidence", "Low Support"])
+
+st.bar_chart(chart_df)
+
+# -----------------------------------------
+# INSIGHT SUMMARY (NOT EXECUTIVE THREAT)
+# -----------------------------------------
+st.markdown("<div class='section'></div>", unsafe_allow_html=True)
+st.markdown("## 🧠 Key Insights")
 
 st.info(
-    "BioClaim Guard analyzed **120 biomedical claims** across vaccines, drugs, "
-    "medical devices, and nutrition. Analysis identified **12 high-risk claims** "
-    "requiring immediate review, **47 moderately supported claims**, and **61 claims "
-    "with strong evidence backing**. Average confidence score across the dataset is **61%**."
+    "Most analyzed biomedical claims demonstrate **moderate to strong support** "
+    "in the literature. However, a subset of claims shows **low evidence density** "
+    "or inconsistent findings, indicating the need for cautious communication."
 )
 
 # -----------------------------------------
-# DETAILED RESULTS TABLE
+# DETAILED CLAIM REVIEW (FIXED DATA)
 # -----------------------------------------
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
-st.markdown("## 📋 Detailed Claim Analysis")
+st.markdown("## 📋 Detailed Claim Review")
 
-data = {
-    "Claim ID": range(1, 11),
-    "Claim Category": random.choices(
-        ["Vaccine", "Drug", "Device", "Nutrition"], k=10
-    ),
-    "Credibility Level": random.choices(
-        ["High Risk", "Moderate", "Low"], k=10
-    ),
-    "Score (%)": [random.randint(45, 90) for _ in range(10)],
-    "Confidence": ["55%", "60%", "65%", "70%", "75%", "80%", "85%", "60%", "68%", "72%"],
-    "Source": ["PubMed", "WHO", "FDA", "ClinicalTrials.gov"] * 2
-}
+rows = 10
 
-df = pd.DataFrame(data)
+df = pd.DataFrame({
+    "Claim ID": range(1, rows + 1),
+    "Domain": random.choices(["Vaccine", "Drug", "Device", "Nutrition"], k=rows),
+    "Evidence Level": random.choices(
+        ["Well-Supported", "Mixed Evidence", "Low Support"], k=rows
+    ),
+    "Credibility Score (%)": [random.randint(45, 90) for _ in range(rows)],
+    "Confidence": [f"{random.randint(55, 85)}%" for _ in range(rows)],
+    "Primary Source": random.choices(
+        ["PubMed", "WHO", "FDA", "ClinicalTrials.gov"], k=rows
+    )
+})
+
 st.dataframe(df, use_container_width=True)
 
 # -----------------------------------------
-# BRAND IDENTITY SYSTEM (REQUIRED)
+# BRAND IDENTITY (EXPLICIT)
 # -----------------------------------------
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
 st.markdown("## 🎨 Brand Identity System")
 
 st.markdown("""
-**Logo & Logotype**  
-🧬 BioClaim Guard — DNA icon + wordmark representing protection, science, and trust.
-""")
+**Logotype**  
+🧬 BioClaim Guard — combining biomedical symbolism with a modern wordmark.
 
-st.markdown("""
 **Color Palette**
 - Navy: `#0F172A`
 - Primary Blue: `#2563EB`
 - Cyan Accent: `#06B6D4`
-- Background: `#F8FAFC`
-""")
+- Neutral Background: `#F8FAFC`
 
-st.markdown("""
 **Typography**
 - Primary: Inter  
 - Fallback: System sans-serif  
-- Style: Clear hierarchy, executive readability
-""")
+- Style: Research-first clarity, executive readability
 
-st.markdown("""
 **Imagery Style**
-- Abstract biomedical motifs
-- Clean dashboards and data visualizations
-- No fear-based medical imagery
+- Abstract scientific motifs (DNA, molecules)
+- Data-forward UI components
+- Avoids sensational medical imagery
 """)
 
 # -----------------------------------------
@@ -192,8 +185,8 @@ st.markdown("""
 # -----------------------------------------
 st.markdown("""
 <hr>
-<div style="text-align:center; color:#64748B; font-size:13px;">
+<div class="small" style="text-align:center;">
 © 2025 BioClaim Guard · Madison AI Framework<br>
-Final Exam Project – Branding & AI
+Branding & AI Final Project
 </div>
 """, unsafe_allow_html=True)
