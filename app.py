@@ -44,21 +44,41 @@ html, body {
 """, unsafe_allow_html=True)
 
 # =========================================================
-# SIDEBAR — ANALYSIS CONTROLS
+# SIMULATION LOGIC (DEMO-SAFE, REACTIVE)
+# =========================================================
+def simulate_credibility(domain, mode):
+    if domain == "Vaccines":
+        base = [70, 35, 15]
+    elif domain == "Drugs":
+        base = [55, 45, 20]
+    elif domain == "Medical Devices":
+        base = [50, 40, 18]
+    elif domain == "Nutrition":
+        base = [40, 50, 30]
+    else:
+        base = [61, 47, 12]
+
+    if mode == "Deep Evidence Review":
+        base = [base[0] + 5, base[1] - 3, max(base[2] - 2, 0)]
+
+    return base
+
+# =========================================================
+# SIDEBAR — REVIEW CONTROLS
 # =========================================================
 st.sidebar.markdown("## ⚙️ Review Controls")
 
-st.sidebar.selectbox(
+domain = st.sidebar.selectbox(
     "Claim Domain",
     ["All Domains", "Vaccines", "Drugs", "Medical Devices", "Nutrition"]
 )
 
-st.sidebar.selectbox(
+window = st.sidebar.selectbox(
     "Evidence Window",
     ["Last 6 months", "Last 1 year", "Last 3 years"]
 )
 
-st.sidebar.radio(
+mode = st.sidebar.radio(
     "Review Mode",
     ["Rapid Screening", "Deep Evidence Review"]
 )
@@ -89,45 +109,66 @@ A Credibility Review Workspace for Biomedical & Health Claims
 """, unsafe_allow_html=True)
 
 # =========================================================
-# RUN ANALYSIS
+# RUN REVIEW (OPTIONAL BUTTON)
 # =========================================================
 if st.button("🔍 Review Claim Dataset"):
-    with st.spinner("Evaluating evidence signals responsibly..."):
-        time.sleep(1.4)
-    st.success("Credibility review complete")
+    with st.spinner("Evaluating evidence patterns responsibly..."):
+        time.sleep(1.2)
+    st.success("Credibility review updated")
 
 # =========================================================
-# OVERVIEW METRICS
+# REACTIVE METRICS
 # =========================================================
+well, mixed, low = simulate_credibility(domain, mode)
+total = well + mixed + low
+
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
 st.markdown("## 📌 Credibility Overview")
 
 c1, c2, c3, c4 = st.columns(4)
 
 with c1:
-    st.markdown("<div class='card'><h4>Total Claims Reviewed</h4><div class='metric'>120</div></div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='card'><h4>Total Claims Reviewed</h4><div class='metric'>{total}</div></div>",
+        unsafe_allow_html=True
+    )
 
 with c2:
-    st.markdown("<div class='card'><h4>Well-Supported</h4><div class='metric' style='color:#16A34A;'>61</div></div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='card'><h4>Well-Supported</h4><div class='metric' style='color:#16A34A;'>{well}</div></div>",
+        unsafe_allow_html=True
+    )
 
 with c3:
-    st.markdown("<div class='card'><h4>Mixed Evidence</h4><div class='metric' style='color:#F59E0B;'>47</div></div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='card'><h4>Mixed Evidence</h4><div class='metric' style='color:#F59E0B;'>{mixed}</div></div>",
+        unsafe_allow_html=True
+    )
 
 with c4:
-    st.markdown("<div class='card'><h4>Low Support</h4><div class='metric' style='color:#EF4444;'>12</div></div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='card'><h4>Low Support</h4><div class='metric' style='color:#EF4444;'>{low}</div></div>",
+        unsafe_allow_html=True
+    )
 
 # =========================================================
-# EVIDENCE DISTRIBUTION
+# CREDIBILITY DISTRIBUTION — AREA CHART (NOT BAR)
 # =========================================================
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
-st.markdown("## 📊 Evidence Support Distribution")
+st.markdown("## 🌊 Evidence Support Landscape")
 
-chart_df = pd.DataFrame(
-    {"Claims": [61, 47, 12]},
-    index=["Well-Supported", "Mixed Evidence", "Low Support"]
+area_df = pd.DataFrame({
+    "Well-Supported": [well],
+    "Mixed Evidence": [mixed],
+    "Low Support": [low]
+})
+
+st.area_chart(area_df)
+
+st.caption(
+    "This area chart represents the relative evidence landscape across credibility tiers. "
+    "Values update dynamically based on review controls."
 )
-
-st.bar_chart(chart_df)
 
 # =========================================================
 # INTERPRETIVE INSIGHTS
@@ -136,13 +177,13 @@ st.markdown("<div class='section'></div>", unsafe_allow_html=True)
 st.markdown("## 🧠 Interpretive Insights")
 
 st.info(
-    "The majority of reviewed biomedical claims demonstrate **moderate to strong support** "
-    "within existing literature. A smaller subset shows **low or inconsistent evidence**, "
-    "indicating areas where cautious communication and further review are warranted."
+    "Credibility patterns shift based on claim domain and review depth. "
+    "Domains with heterogeneous evidence bases (e.g., nutrition) show larger mixed-evidence regions, "
+    "while domains with mature literature (e.g., vaccines) skew toward stronger support."
 )
 
 # =========================================================
-# DETAILED CLAIM REVIEW (ERROR-FREE)
+# DETAILED CLAIM REVIEW (REACTIVE TABLE)
 # =========================================================
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
 st.markdown("## 📋 Detailed Claim Review")
@@ -151,7 +192,9 @@ rows = 10
 
 df = pd.DataFrame({
     "Claim ID": range(1, rows + 1),
-    "Domain": random.choices(["Vaccine", "Drug", "Device", "Nutrition"], k=rows),
+    "Domain": random.choices(
+        ["Vaccine", "Drug", "Device", "Nutrition"], k=rows
+    ),
     "Evidence Level": random.choices(
         ["Well-Supported", "Mixed Evidence", "Low Support"], k=rows
     ),
@@ -171,9 +214,10 @@ st.markdown("<div class='section'></div>", unsafe_allow_html=True)
 
 st.markdown("""
 <h2>🧬 The BioClaim Credibility Framework</h2>
-<p class="small" style="max-width:800px;">
-BioClaim Guard is designed as a reasoning workspace rather than a monitoring dashboard.
-Its identity system reinforces trust, restraint, and scientific clarity.
+<p class="small" style="max-width:820px;">
+BioClaim Guard is intentionally designed as a reasoning workspace — not a monitoring
+or threat-detection dashboard. Its identity system reinforces trust, restraint,
+and scientific clarity.
 </p>
 """, unsafe_allow_html=True)
 
@@ -184,13 +228,13 @@ with col_a:
     <div class="card">
     <h3>Brand Expression</h3>
     <p class="small">
-    BioClaim Guard communicates calm authority. The brand avoids alarmism and emphasizes
-    transparency, uncertainty, and evidence-based reasoning.
+    Calm authority over alarmism. The interface avoids urgency cues and instead
+    supports thoughtful interpretation of evidence.
     </p>
     <ul>
       <li><strong>Symbol:</strong> 🧬 DNA motif representing evidence</li>
-      <li><strong>Wordmark:</strong> Bold typography for clarity</li>
-      <li><strong>Voice:</strong> Neutral, ethical, non-sensational</li>
+      <li><strong>Wordmark:</strong> Bold, minimal, confidence-forward</li>
+      <li><strong>Voice:</strong> Neutral, ethical, evidence-first</li>
     </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -207,9 +251,9 @@ with col_b:
       <div style="background:#06B6D4; color:#083344; padding:10px; border-radius:8px;">Cyan<br>#06B6D4</div>
     </div>
 
-    <p><strong>Typography:</strong> Inter (system fallback sans-serif)</p>
+    <p><strong>Typography:</strong> Inter (system sans-serif fallback)</p>
     <p class="small">
-    Optimized for readability in dense scientific and journalistic workflows.
+    Optimized for dense scientific and journalistic workflows.
     </p>
 
     <p><strong>Imagery:</strong> Abstract molecular forms, data-forward UI, generous whitespace.</p>
