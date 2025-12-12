@@ -27,7 +27,7 @@ html, body {
     margin-top:48px;
 }
 .card {
-    background: white;
+    background:white;
     padding:24px;
     border-radius:18px;
     box-shadow:0px 10px 28px rgba(15,23,42,0.08);
@@ -44,24 +44,26 @@ html, body {
 """, unsafe_allow_html=True)
 
 # =========================================================
-# SIMULATION LOGIC (DEMO-SAFE, REACTIVE)
+# SIMULATION LOGIC (REACTIVE, DEMO-SAFE)
 # =========================================================
 def simulate_credibility(domain, mode):
     if domain == "Vaccines":
-        base = [70, 35, 15]
+        well, mixed, low = 70, 35, 15
     elif domain == "Drugs":
-        base = [55, 45, 20]
+        well, mixed, low = 55, 45, 20
     elif domain == "Medical Devices":
-        base = [50, 40, 18]
+        well, mixed, low = 50, 40, 18
     elif domain == "Nutrition":
-        base = [40, 50, 30]
+        well, mixed, low = 40, 50, 30
     else:
-        base = [61, 47, 12]
+        well, mixed, low = 61, 47, 12
 
     if mode == "Deep Evidence Review":
-        base = [base[0] + 5, base[1] - 3, max(base[2] - 2, 0)]
+        well += 5
+        mixed -= 3
+        low = max(low - 2, 0)
 
-    return base
+    return well, mixed, low
 
 # =========================================================
 # SIDEBAR — REVIEW CONTROLS
@@ -109,10 +111,10 @@ A Credibility Review Workspace for Biomedical & Health Claims
 """, unsafe_allow_html=True)
 
 # =========================================================
-# RUN REVIEW (OPTIONAL BUTTON)
+# RUN REVIEW BUTTON (OPTIONAL)
 # =========================================================
 if st.button("🔍 Review Claim Dataset"):
-    with st.spinner("Evaluating evidence patterns responsibly..."):
+    with st.spinner("Evaluating evidence patterns responsibly…"):
         time.sleep(1.2)
     st.success("Credibility review updated")
 
@@ -152,37 +154,25 @@ with c4:
     )
 
 # =========================================================
-# CREDIBILITY DISTRIBUTION — AREA CHART (NOT BAR)
+# CREDIBILITY TRAJECTORY (WORKING GRAPH)
 # =========================================================
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
-st.markdown("## 🌊 Evidence Support Landscape")
+st.markdown("## 🌊 Credibility Trajectory")
 
-# =========================================================
-# EVIDENCE SUPPORT LANDSCAPE (STACKED LINE VIEW)
-# =========================================================
-st.markdown("<div class='section'></div>", unsafe_allow_html=True)
-st.markdown("## 🌊 Evidence Support Landscape")
-
-# simulate progression across review stages
-landscape_df = pd.DataFrame({
-    "Well-Supported": [well * 0.6, well * 0.8, well],
-    "Mixed Evidence": [mixed * 0.7, mixed * 0.9, mixed],
-    "Low Support": [low * 0.8, low * 0.9, low]
-}, index=["Initial Scan", "Context Review", "Final Assessment"])
-
-st.line_chart(landscape_df)
-
-st.caption(
-    "This visualization shows how evidence confidence evolves across review stages. "
-    "Values update dynamically based on domain and review depth."
+trajectory_df = pd.DataFrame(
+    {
+        "Well-Supported": [well * 0.6, well * 0.8, well],
+        "Mixed Evidence": [mixed * 0.7, mixed * 0.9, mixed],
+        "Low Support": [low * 0.8, low * 0.9, low],
+    },
+    index=["Initial Scan", "Context Review", "Final Assessment"]
 )
 
-
-st.area_chart(area_df)
+st.line_chart(trajectory_df)
 
 st.caption(
-    "This area chart represents the relative evidence landscape across credibility tiers. "
-    "Values update dynamically based on review controls."
+    "This trajectory illustrates how evidence confidence evolves across review stages. "
+    "Values update dynamically based on domain and review depth."
 )
 
 # =========================================================
@@ -192,13 +182,13 @@ st.markdown("<div class='section'></div>", unsafe_allow_html=True)
 st.markdown("## 🧠 Interpretive Insights")
 
 st.info(
-    "Credibility patterns shift based on claim domain and review depth. "
-    "Domains with heterogeneous evidence bases (e.g., nutrition) show larger mixed-evidence regions, "
-    "while domains with mature literature (e.g., vaccines) skew toward stronger support."
+    "Credibility is not static. Domains with mature research bases trend toward "
+    "stronger support over deeper review, while heterogeneous domains maintain larger "
+    "mixed-evidence regions."
 )
 
 # =========================================================
-# DETAILED CLAIM REVIEW (REACTIVE TABLE)
+# DETAILED CLAIM REVIEW (STABLE TABLE)
 # =========================================================
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
 st.markdown("## 📋 Detailed Claim Review")
@@ -223,16 +213,15 @@ df = pd.DataFrame({
 st.dataframe(df, use_container_width=True)
 
 # =========================================================
-# BIOCLAIM CREDIBILITY FRAMEWORK (UNIQUE BRAND SYSTEM)
+# BIOCLAIM CREDIBILITY FRAMEWORK (BRAND IDENTITY)
 # =========================================================
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
 
 st.markdown("""
 <h2>🧬 The BioClaim Credibility Framework</h2>
 <p class="small" style="max-width:820px;">
-BioClaim Guard is intentionally designed as a reasoning workspace — not a monitoring
-or threat-detection dashboard. Its identity system reinforces trust, restraint,
-and scientific clarity.
+BioClaim Guard is intentionally designed as a reasoning workspace rather than a monitoring
+or threat-detection dashboard. Its brand system reinforces trust, restraint, and clarity.
 </p>
 """, unsafe_allow_html=True)
 
@@ -242,14 +231,10 @@ with col_a:
     st.markdown("""
     <div class="card">
     <h3>Brand Expression</h3>
-    <p class="small">
-    Calm authority over alarmism. The interface avoids urgency cues and instead
-    supports thoughtful interpretation of evidence.
-    </p>
     <ul>
       <li><strong>Symbol:</strong> 🧬 DNA motif representing evidence</li>
-      <li><strong>Wordmark:</strong> Bold, minimal, confidence-forward</li>
-      <li><strong>Voice:</strong> Neutral, ethical, evidence-first</li>
+      <li><strong>Voice:</strong> Calm, ethical, non-sensational</li>
+      <li><strong>Positioning:</strong> Credibility over certainty</li>
     </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -259,19 +244,14 @@ with col_b:
     <div class="card">
     <h3>Visual System</h3>
 
-    <strong>Core Colors</strong>
-    <div style="display:flex; gap:10px; margin:12px 0;">
+    <div style="display:flex; gap:10px; margin-bottom:12px;">
       <div style="background:#0F172A; color:white; padding:10px; border-radius:8px;">Navy<br>#0F172A</div>
       <div style="background:#2563EB; color:white; padding:10px; border-radius:8px;">Blue<br>#2563EB</div>
       <div style="background:#06B6D4; color:#083344; padding:10px; border-radius:8px;">Cyan<br>#06B6D4</div>
     </div>
 
-    <p><strong>Typography:</strong> Inter (system sans-serif fallback)</p>
-    <p class="small">
-    Optimized for dense scientific and journalistic workflows.
-    </p>
-
-    <p><strong>Imagery:</strong> Abstract molecular forms, data-forward UI, generous whitespace.</p>
+    <p><strong>Typography:</strong> Inter (system sans-serif)</p>
+    <p class="small">Optimized for dense scientific and journalistic workflows.</p>
     </div>
     """, unsafe_allow_html=True)
 
