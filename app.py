@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import random
 import time
-import matplotlib.pyplot as plt
 
 # -----------------------------------------
 # PAGE CONFIG
@@ -58,11 +57,11 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("### 🧬 About BioClaim Guard")
 st.sidebar.info(
     "BioClaim Guard is an AI-assisted credibility assessment tool for biomedical "
-    "and health-related claims. Powered by Madison AI Framework."
+    "and health-related claims. Powered by the Madison AI Framework."
 )
 
 # -----------------------------------------
-# HEADER / LOGO
+# HEADER / LOGOTYPE
 # -----------------------------------------
 st.markdown("""
 <h1 style="
@@ -109,20 +108,16 @@ with col4:
     st.markdown("<div class='metric-card'><h3>Avg Confidence</h3><h1>61%</h1></div>", unsafe_allow_html=True)
 
 # -----------------------------------------
-# THREAT DISTRIBUTION CHART
+# CREDIBILITY DISTRIBUTION (NO MATPLOTLIB)
 # -----------------------------------------
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
 st.markdown("## 📈 Credibility Distribution")
 
-labels = ["High Risk", "Moderate", "Low"]
-values = [12, 47, 61]
+chart_data = pd.DataFrame({
+    "Claims": [12, 47, 61]
+}, index=["High Risk", "Moderate", "Low"])
 
-fig, ax = plt.subplots()
-ax.bar(labels, values)
-ax.set_ylabel("Number of Claims")
-ax.set_title("Claim Credibility Levels")
-
-st.pyplot(fig)
+st.bar_chart(chart_data)
 
 # -----------------------------------------
 # EXECUTIVE SUMMARY
@@ -157,22 +152,21 @@ data = {
 }
 
 df = pd.DataFrame(data)
-
 st.dataframe(df, use_container_width=True)
 
 # -----------------------------------------
-# BRAND IDENTITY SYSTEM (VISIBLE ON SITE)
+# BRAND IDENTITY SYSTEM (REQUIRED)
 # -----------------------------------------
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
 st.markdown("## 🎨 Brand Identity System")
 
 st.markdown("""
-### Logo & Logotype
-🧬 **BioClaim Guard** — DNA icon + wordmark symbolizing protection, science, and trust.
+**Logo & Logotype**  
+🧬 BioClaim Guard — DNA icon + wordmark representing protection, science, and trust.
 """)
 
 st.markdown("""
-### Color Palette
+**Color Palette**
 - Navy: `#0F172A`
 - Primary Blue: `#2563EB`
 - Cyan Accent: `#06B6D4`
@@ -180,16 +174,16 @@ st.markdown("""
 """)
 
 st.markdown("""
-### Typography
-- **Primary:** Inter
-- **Fallback:** System sans-serif
-- **Style:** Clear hierarchy, readable, executive-friendly
+**Typography**
+- Primary: Inter  
+- Fallback: System sans-serif  
+- Style: Clear hierarchy, executive readability
 """)
 
 st.markdown("""
-### Imagery Style
+**Imagery Style**
 - Abstract biomedical motifs
-- Clean dashboards and data visualization
+- Clean dashboards and data visualizations
 - No fear-based medical imagery
 """)
 
