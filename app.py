@@ -156,14 +156,30 @@ with c4:
 # =========================================================
 # CREDIBILITY TRAJECTORY (WORKING GRAPH)
 # =========================================================
+# =========================================================
+# CREDIBILITY TRAJECTORY (VISIBLY REACTIVE)
+# =========================================================
 st.markdown("<div class='section'></div>", unsafe_allow_html=True)
 st.markdown("## 🌊 Credibility Trajectory")
 
+# exaggerate progression so changes are visible
 trajectory_df = pd.DataFrame(
     {
-        "Well-Supported": [well * 0.6, well * 0.8, well],
-        "Mixed Evidence": [mixed * 0.7, mixed * 0.9, mixed],
-        "Low Support": [low * 0.8, low * 0.9, low],
+        "Well-Supported": [
+            well * 0.4,
+            well * 0.7,
+            well
+        ],
+        "Mixed Evidence": [
+            mixed * 0.9,
+            mixed * 0.6,
+            mixed * 0.4
+        ],
+        "Low Support": [
+            low,
+            low * 0.6,
+            low * 0.3
+        ],
     },
     index=["Initial Scan", "Context Review", "Final Assessment"]
 )
@@ -171,9 +187,10 @@ trajectory_df = pd.DataFrame(
 st.line_chart(trajectory_df)
 
 st.caption(
-    "This trajectory illustrates how evidence confidence evolves across review stages. "
-    "Values update dynamically based on domain and review depth."
+    "The trajectory shows how evidence confidence shifts as claims undergo deeper review. "
+    "Patterns update dynamically based on domain and review depth."
 )
+
 
 # =========================================================
 # INTERPRETIVE INSIGHTS
